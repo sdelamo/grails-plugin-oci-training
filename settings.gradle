@@ -1,0 +1,11 @@
+include 'scraper'
+include 'plugin'
+include 'app'
+include 'docs'
+
+include 'examples/grails-test-app'
+
+rootProject.name = 'grails-plugin-oci-training'
+
+findProject(':scraper').name = 'oci-training-scraper'
+findProject(':plugin').name = 'oci-training'

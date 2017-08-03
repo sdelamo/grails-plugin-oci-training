@@ -1,0 +1,5 @@
+com:
+    objectcomputing:
+        training:
+            refresh:
+                enabled: true
