@@ -21,10 +21,10 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
   echo "Publishing archives for branch $TRAVIS_BRANCH"
   if [[ -n $TRAVIS_TAG ]]; then
       echo "Pushing build to Bintray"
-      ./gradlew :spring-security-ui:bintrayUpload || EXIT_STATUS=$?
+      ./gradlew :oci-training:bintrayUpload || EXIT_STATUS=$?
   else
       echo "Publishing snapshot to OJO"
-      ./gradlew :spring-security-ui:artifactoryPublish || EXIT_STATUS=$?
+      ./gradlew :oci-training:artifactoryPublish || EXIT_STATUS=$?
   fi
 
   if (( $EXIT_STATUS > 0))
