@@ -17,7 +17,7 @@ then
 fi
 
 # Only publish if the branch is on master, and it is not a PR
-if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == '3.0.x' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
   echo "Publishing archives for branch $TRAVIS_BRANCH"
   if [[ -n $TRAVIS_TAG ]]; then
       echo "Pushing build to Bintray"
