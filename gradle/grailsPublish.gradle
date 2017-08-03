@@ -15,9 +15,9 @@ grailsPublish {
     license {
         name = project.hasProperty('license') ? [project.license] : ['Apache-2.0']
     }
-    issueTrackerUrl = project.hasProperty('issueTrackerUrl') ? project.issueTrackerUrl : "https://github.com/grails-plugins/$project.name/issues"
-    vcsUrl = project.hasProperty('vcsUrl') ? project.vcsUrl : "https://github.com/grails-plugins/$project.name"
-    title = 'Grails spring-security-core plugin'
+    issueTrackerUrl = project.hasProperty('issueTrackerUrl') ? project.issueTrackerUrl : "https://github.com/sdelamo/$project.name/issues"
+    vcsUrl = project.hasProperty('vcsUrl') ? project.vcsUrl : "https://github.com/sdelamo/$project.name"
+    title = 'Grails OCI Training plugin'
     desc = ''
-    developers = [burtbeckwith:"Burt Beckwith"]
+    developers = [sdelamo:"Sergio del Amo"]
 }
