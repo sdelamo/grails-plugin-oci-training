@@ -4,6 +4,9 @@ repositories {
     jcenter()
 }
 
+version projectVersion
+group "org.grails.plugins"
+
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.12'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
@@ -14,7 +17,8 @@ dependencies {
     compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
 }
 
-
 test {
     systemProperties System.properties
 }
+
+apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
