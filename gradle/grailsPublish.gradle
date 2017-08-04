@@ -12,7 +12,9 @@ grailsPublish {
     userOrg = project.hasProperty('userOrg') ? project.userOrg : 'grails'
     repo = project.hasProperty('repo') ? project.repo : 'plugins'
     websiteUrl = project.hasProperty('websiteUrl') ? project.websiteUrl : "http://grails.org/plugin/$project.name"
-    licenses = ['Apache-2.0']
+    license {
+        name = 'Apache-2.0'
+    }
     issueTrackerUrl = project.hasProperty('issueTrackerUrl') ? project.issueTrackerUrl : "https://github.com/sdelamo/$project.name/issues"
     vcsUrl = project.hasProperty('vcsUrl') ? project.vcsUrl : "https://github.com/sdelamo/$project.name"
     title = project.title
