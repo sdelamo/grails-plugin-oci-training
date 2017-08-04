@@ -58,10 +58,10 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
 
   # If there is a tag present then this becomes the latest
   if [[ -n $TRAVIS_TAG ]]; then
-        # git rm -rf latest/
-        # mkdir -p latest
-        # cp -r ../docs/build/docs/. ./latest/
-        # git add latest/*
+        git rm -rf latest/
+        mkdir -p latest
+        cp -r ../docs/build/docs/. ./latest/
+        git add latest/*
 
         version="$TRAVIS_TAG" # eg: v3.0.1
         version=${version:1} # 3.0.1
@@ -73,6 +73,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
         git add "$version/*"
 
         git rm -rf "$majorVersion"
+        mkdir -p "$majorVersion"
         cp -r ../docs/build/docs/. "./$majorVersion/"
         git add "$majorVersion/*"
   fi
