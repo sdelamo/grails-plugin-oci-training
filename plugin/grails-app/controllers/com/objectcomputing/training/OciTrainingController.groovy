@@ -31,7 +31,8 @@ class OciTrainingController implements GrailsConfigurationAware {
         }
         ociTrainingService.refreshTrainingOfferings()
 
-        respond 'OK'
+        Map model = [msg: 'OK']
+        respond model
     }
 
     @Override
