@@ -22,6 +22,7 @@ if [[ -n $TRAVIS_TAG ]] || [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST
   if [[ -n $TRAVIS_TAG ]]; then
       echo "Pushing build to Bintray"
       ./gradlew :oci-training:bintrayUpload || EXIT_STATUS=$?
+      ./gradlew :oci-training-scraper:bintrayUpload || EXIT_STATUS=$?
   else
       echo "Publishing snapshot to OJO"
       ./gradlew :oci-training:artifactoryPublish || EXIT_STATUS=$?
