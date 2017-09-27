@@ -8,13 +8,12 @@ class TrainingScheduleBrowserSpec extends Specification {
 
     def "fetch offerings"() {
 
-        given:
-        TrainingScheduleBrowser browser = new TrainingScheduleBrowser()
-
         when:
-        Set<Offering> offerings = browser.offerings()
+        Set<Offering> offerings = TrainingScheduleBrowser.offerings()
 
-        offerings.each { println it }
+        offerings.each { Offering offering ->
+            println "${offering.soldOut ? 'SOLD OUT': 'AVAILABLE'} ${offering.course} ${offering.track.name} "
+        }
 
         then:
         offerings

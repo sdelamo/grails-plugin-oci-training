@@ -1,0 +1,174 @@
+= Scraping with Geb
+
+http://www.gebish.org[Geb] is a browser automation solution.
+It brings together the power of http://code.google.com/p/selenium/[WebDriver],
+the elegance of http://jquery.com/[jQuery] content selection,
+the robustness of http://code.google.com/p/selenium/wiki/PageObjects[Page Object] modeling and the expressiveness
+of the http://www.groovy-lang.org/[Groovy] language.
+
+Geb is often used as a functional/web/acceptance testing solution via integration with testing frameworks such as
+Spock, JUnit & TestNG. In this article, we are going to show how Geb can be used to Screen Scraping.
+
+The next steps describe how to **create a Webbot which scrapes the OCI Training Website**.
+
+== Project configuration
+
+https://guides.gradle.org/building-groovy-libraries/[Create a Groovy Library] with Gradle.
+
+[source, bash]
+----
+$ mkdir scraper
+$ cd scraper
+$ gradle init --type groovy-library
+----
+
+Replace the content of `build.gradle` with:
+
+[source, groovy]
+.build.gradle
+----
+include::../../../build.gradle[tag=applygroovyplugin]
+
+include::../../../build.gradle[tag=repositories]
+
+include::../../../build.gradle[tag=versiongroup]
+
+include::../../../build.gradle[tag=dependencies]
+
+include::../../../build.gradle[tag=test]
+----
+
+Geb builds on the WebDriver browser automation library, which means that Geb can work with any browser that WebDriver can.
+The previous `build.gradle` includes dependencies for Geb, Selenium and the two browsers (htmlUnit and firefox) used in this webbot.
+
+
+Geb attempts to load a ConfigSlurper script named `GebConfig.groovy` from the default package (in other words, in the root of a directory that is on the classpath)
+
+[source, groovy]
+.src/main/groovy/GebConfig.groovy
+----
+include::../../main/groovy/GebConfig.groovy[]
+----
+
+The Groovy ConfigSlurper mechanism has built-in support for
+environment sensitive configuration, and Geb leverages this by using
+the `geb.env` system property to determine the environment to use.
+An effective use of this mechanism is to configure different drivers
+based on the designated Geb “environment”
+
+To use Firefox driver, supply the System property `geb.env` with value `firefox`.
+To use HTMLUnit (a GUI-LESS browser) driver, supply the System property `geb.env` with value `htmlUnit.`
+
+== Understanding the page
+
+If you visit `https://objectcomputing.com/training/schedule/` and inspect
+ the Track selector you can check the different Track Ids.
+
+image::select-tracks.png[link=images/select-tracks.png]
+
+If you visit `https://objectcomputing.com/training/schedule/?track=11`,the training offerings are filtered by _Grails Training_.
+The `track parameter takes the track ID as a value.
+
+image::filtered-track.png[link=${imagedir}filtered-tracks.png]
+
+Clicking a training offering opens a modal window. That modal window includes important information. For example, if the
+course is _Sold Out_.
+
+image::popup.png[link=images/popup.png]
+
+Clicking a training offering is equivalent to visiting `https://objectcomputing.com/training/schedule/#schedule-offering-48`.
+The last number of the previous url is the offering id.
+
+== Map Information to a Model
+
+Create the next classes to model OCI's training offering.
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/model/Offering.groovy
+----
+include::../../main/groovy/com/objectcomputing/model/Offering.groovy[]
+----
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/model/Track.groovy
+----
+include::../../main/groovy/com/objectcomputing/model/Track.groovy[]
+----
+
+== Encapsulate different areas with Pages
+
+The Page Object Pattern gives us a common sense way to model content in a reusable and maintainable way.
+From the http://code.google.com/p/selenium/wiki/PageObjects[WebDriver wiki page on the Page Object Pattern]:
+____
+    Within your web app’s UI there are areas that your tests interact with.
+    A Page Object simply models these as objects within the test code.
+    This reduces the amount of duplicated code and means that if the UI changes,
+    the fix need only be applied in one place.
+____
+
+Create a Geb Page is a simple as creating a class which extends `geb.Page`.
+
+Geb features a DSL for defining page content in a templated fashion, which allows
+very concise yet flexible page definitions. Pages define a static closure property
+called `content` that describes the page content.
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/geb/TrackSelectorPage.groovy
+----
+include::../../main/groovy/com/objectcomputing/geb/TrackSelectorPage.groovy[]
+----
+
+The next page traverses the training offerings table.
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/geb/TrainingSchedulePage.groovy
+----
+include::../../main/groovy/com/objectcomputing/geb/TrainingSchedulePage.groovy[]
+----
+
+The next page checks if the text "Sold Out" appears in the modal window content.
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/geb/TrainingScheduleModalPage.groovy
+----
+include::../../main/groovy/com/objectcomputing/geb/TrainingScheduleModalPage.groovy[]
+----
+
+The previous two pages override the method `convertToPath` which allows building dynamic urls.
+
+You could have created a single page which encapsulated all the functionality described in the previous
+three pages. But having smaller pages makes the code easier to follow and mantain.
+
+== Orchestrate navigation
+
+The next class organizes the navigation while capturing the training information.
+
+[source, groovy]
+.src/main/groovy/com/objectcomputing/geb/TrainingScheduleBrowser.groovy
+----
+include::../../main/groovy/com/objectcomputing/geb/TrainingScheduleBrowser.groovy[]
+----
+
+If you execute, `Set<Offering> offerings = TrainingScheduleBrowser.offerings()` and supply the `-Dgeb.env=firefox`.
+
+You will see a browser popup and navigate the OCI Training offerings as displayed in the next video.
+
+video::kr-Eb74E150[youtube, width=640, height=360]
+
+== Next Steps
+
+The next logical step would be to output the scraped information. We have developed a
+https://github.com/sdelamo/grails-plugin-oci-training[Grails Plugin]
+which encapsulates this library. It executes the scraper each hour to get the latest training information.
+The scraped information is cached and exposed as a JSON API.
+
+Each http://guides.grails[Grails Guide] displays training information up-to-date thanks to this scraper which
+has transformed a static HTML page in a JSON API.
+
+image::guides.png[link=images/guides.png]
+
+Happy scrapping with http://gebish.org[Geb]!
+
+
+
+

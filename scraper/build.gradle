@@ -2,23 +2,31 @@ buildscript {
     repositories {
         jcenter()
     }
+
     dependencies {
+        classpath 'org.asciidoctor:asciidoctor-gradle-plugin:1.5.3'
         classpath 'com.jfrog.bintray.gradle:gradle-bintray-plugin:1.7.3'
     }
 }
-
+//tag::applygroovyplugin[]
+apply plugin: 'groovy'
+//end::applygroovyplugin[]
 apply plugin: 'maven'
 apply plugin: 'maven-publish'
-apply plugin: 'groovy'
 apply plugin: 'com.jfrog.bintray'
+apply plugin: 'org.asciidoctor.convert'
 
+//tag::repositories[]
 repositories {
     jcenter()
 }
+//end::repositories[]
 
+//tag::versiongroup[]
 version projectVersion
 group "com.objectcomputing"
-
+//end::versiongroup[]
+//tag::dependencies[]
 dependencies {
     compile 'org.codehaus.groovy:groovy-all:2.4.12'
     testCompile 'org.spockframework:spock-core:1.0-groovy-2.4'
@@ -28,13 +36,23 @@ dependencies {
     compile "net.sourceforge.htmlunit:htmlunit:2.18"
     compile "org.seleniumhq.selenium:selenium-htmlunit-driver:2.47.1"
 }
-
+//end::dependencies[]
+//tag::test[]
 test {
     systemProperties System.properties
 }
+//end::test[]
 
 apply from: "${rootProject.projectDir}/gradle/testVerbose.gradle"
 
+asciidoctor {
+    backends 'html5'
+    attributes \
+        'build-gradle': file('build.gradle'),
+        'sourcedir': project.sourceSets.main.java.srcDirs[0],
+        'imagesdir': './images',
+        'source-highlighter': 'coderay'
+}
 
 task sourceJar(type: Jar) {
     from sourceSets.main.allJava

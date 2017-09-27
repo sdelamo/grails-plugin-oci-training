@@ -10,8 +10,7 @@ import groovy.util.logging.Slf4j
 class OciTrainingService {
 
     void refreshTrainingOfferings() {
-        TrainingScheduleBrowser browser = new TrainingScheduleBrowser()
-        Set<Offering> offerings = browser.offerings()
+        Set<Offering> offerings = TrainingScheduleBrowser.offerings()
         log.info('Fetched #{} training offerings', offerings.size())
         offerings.each {
             log.info '{}', it.toString()
